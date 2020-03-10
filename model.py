@@ -15,9 +15,10 @@ class Beam:
 class Ball:
     gravity = 9.7
 
-    def __init__(self, location=0):
+    def __init__(self, location=0, friction_amount=0.01):
         self.velocity = 0
         self.location = location
+        self.friction_amount = friction_amount
 
     def run_timestep(self, angle):
         # update location
@@ -28,7 +29,7 @@ class Ball:
         velocity_change = math.sin(angle) * self.gravity
 
         # Friction
-        friction = 0.01 * abs(math.cos(angle)) * self.gravity
+        friction = self.friction_amount * abs(math.cos(angle)) * self.gravity
         if abs(friction) < abs(self.velocity):
             if self.velocity < 0:
                 velocity_change += friction
@@ -47,7 +48,7 @@ class Model:
     def __init__(self, balls=None):
         self.t = 0
         self.beam = Beam()
-        self.balls = balls or [Ball(random.randint(0, self.beam.size)) for _ in range(3)]
+        self.balls = balls or [Ball(self.beam.size / 2, random.random() / 10) for _ in range(3)]
 
     def turn_beam_left(self):
         self.beam.change_angle(-2)
