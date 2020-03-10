@@ -29,7 +29,7 @@ class MyCanvas(tk.Canvas):
             points = self.rotate(points, angle, rotate_center)
         self.create_polygon(points, fill=color)
 
-    def draw_rectangle(self, x, y, width, height, color="brown", angle=None, rotate_center=None):
+    def draw_rectangle(self, x, y, width, height, color, angle=None, rotate_center=None):
         points = [
             (x, y),
             (x + width, y),
@@ -39,7 +39,7 @@ class MyCanvas(tk.Canvas):
         center = rotate_center or (x + width * 0.5, y + height * 0.5)
         self.draw_points(points, color, angle, center)
 
-    def draw_circle(self, x, y, size, color="brown", angle=None, rotate_center=None):
+    def draw_circle(self, x, y, size, color, angle=None, rotate_center=None):
         # Generate the points to draw the circle
         r = size * 0.5  # radius of the circle
         res = size  # resolution
@@ -55,7 +55,7 @@ class MyCanvas(tk.Canvas):
     def draw_beam(self, beam, center):
         self.draw_rectangle(
             *self.get_beam_coordinates(beam, center),
-            color="red",
+            color="RoyalBlue3",
             angle=beam.angle
         )
 
@@ -69,7 +69,7 @@ class MyCanvas(tk.Canvas):
             x=start_x + ball.location,
             y=y,
             size=ball_size,
-            color="green",
+            color="sea green",
             angle=beam.angle,
             rotate_center=(beam_x + beam_width * 0.5, beam_y + beam_height * 0.5)
         )

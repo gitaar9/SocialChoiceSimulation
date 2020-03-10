@@ -34,6 +34,8 @@ class Ball:
                 velocity_change += friction
             else:
                 velocity_change -= friction
+        else:
+            self.velocity = 0
 
         self.velocity = self.velocity + velocity_change
 
