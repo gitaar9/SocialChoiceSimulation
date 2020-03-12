@@ -1,4 +1,5 @@
 from model import Model
+from social_choice_functions import *
 from view import View
 import time
 
@@ -7,7 +8,7 @@ class Program:
 
     def __init__(self, time_step_duration=100):
         self.time_step_duration = time_step_duration
-        self.model = Model()
+        self.model = Model(social_choice_function=Plurality)
         self.view = View(self.model, self.keydown)
 
     def keydown(self, e):
