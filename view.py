@@ -61,7 +61,7 @@ class MyCanvas(tk.Canvas):
 
     def draw_ball(self, beam, ball, center):
         start_x = center - beam.size / 2
-        ball_size = 40
+        ball_size = 35
         y = self.beam_y - ball_size
 
         beam_x, beam_y, beam_width, beam_height = self.get_beam_coordinates(beam, center)

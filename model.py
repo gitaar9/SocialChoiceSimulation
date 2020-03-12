@@ -13,7 +13,7 @@ class Beam:
 
 
 class Ball:
-    gravity = 9.7
+    gravity = 5  # 9.7
 
     def __init__(self, location=0, friction_amount=0.01):
         self.velocity = 0
@@ -48,7 +48,8 @@ class Model:
     def __init__(self, balls=None):
         self.t = 0
         self.beam = Beam()
-        self.balls = balls or [Ball(self.beam.size / 2, random.random() / 10) for _ in range(3)]
+        ball_pos_min, ball_pos_max = self.beam.size * 0.25, self.beam.size * 0.75
+        self.balls = balls or [Ball(random.randint(ball_pos_min, ball_pos_max), random.random() / 10) for _ in range(10)]
 
     def turn_beam_left(self):
         self.beam.change_angle(-2)
