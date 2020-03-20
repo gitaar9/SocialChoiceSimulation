@@ -29,7 +29,7 @@ class MyCanvas(tk.Canvas):
             points = self.rotate(points, angle, rotate_center)
         self.create_polygon(points, fill=color)
 
-    def draw_rectangle(self, x, y, width, height, color="brown", angle=None, rotate_center=None):
+    def draw_rectangle(self, x, y, width, height, color, angle=None, rotate_center=None):
         points = [
             (x, y),
             (x + width, y),
@@ -39,7 +39,21 @@ class MyCanvas(tk.Canvas):
         center = rotate_center or (x + width * 0.5, y + height * 0.5)
         self.draw_points(points, color, angle, center)
 
-    def draw_circle(self, x, y, size, color="brown", angle=None, rotate_center=None):
+    def draw_triangle(self, x, y, size, color='black', angle=None, rotate_center=None, left=True):
+        left_points = [
+            (x - size / 2, y),
+            (x + size / 2, y + size / 2),
+            (x + size / 2, y - size / 2),
+        ]
+        right_points = [
+            (x + size / 2, y),
+            (x - size / 2, y + size / 2),
+            (x - size / 2, y - size / 2),
+        ]
+        center = rotate_center or (x + size * 0.5, y + size * 0.5)
+        self.draw_points(left_points if left else right_points, color, angle, center)
+
+    def draw_circle(self, x, y, size, color, angle=None, rotate_center=None):
         # Generate the points to draw the circle
         r = size * 0.5  # radius of the circle
         res = size  # resolution
@@ -55,24 +69,36 @@ class MyCanvas(tk.Canvas):
     def draw_beam(self, beam, center):
         self.draw_rectangle(
             *self.get_beam_coordinates(beam, center),
-            color="red",
+            color="RoyalBlue3",
             angle=beam.angle
         )
 
-    def draw_ball(self, beam, ball, center):
+    def draw_ball(self, beam, ball, center, model=None):
         start_x = center - beam.size / 2
-        ball_size = 40
+        ball_size = 35
         y = self.beam_y - ball_size
 
         beam_x, beam_y, beam_width, beam_height = self.get_beam_coordinates(beam, center)
+        rotate_center = (beam_x + beam_width * 0.5, beam_y + beam_height * 0.5)
         self.draw_circle(
             x=start_x + ball.location,
             y=y,
             size=ball_size,
-            color="green",
+            color="sea green",
             angle=beam.angle,
-            rotate_center=(beam_x + beam_width * 0.5, beam_y + beam_height * 0.5)
+            rotate_center=rotate_center
         )
+
+        if model:
+            self.draw_triangle(
+                x=start_x + ball.location + ball_size * .5,
+                y=y + ball_size * .5,
+                size=ball_size / 2,
+                color='black',
+                angle=beam.angle,
+                rotate_center=rotate_center,
+                left=ball.get_ballot(model)[0] == 'left'
+            )
 
     def get_beam_coordinates(self, beam, center):
         return center - beam.size / 2, self.beam_y, beam.size, 50
@@ -109,8 +135,8 @@ class View:
         # Draw the beam
         self.canvas.draw_beam(self.model.beam, self.canvas_width / 2)
 
-        for ball in self.model.balls:
-            self.canvas.draw_ball(self.model.beam, ball, self.canvas_width / 2)
+        for ball in self.model.active_balls:
+            self.canvas.draw_ball(self.model.beam, ball, self.canvas_width / 2, self.model)
 
     @staticmethod
     def close(event):
